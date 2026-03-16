@@ -1,0 +1,81 @@
+schema: '2.0'
+stages:
+  get_data:
+    cmd: python scripts/data.py
+    deps:
+    - path: scripts/data.py
+      hash: md5
+      md5: 7acc2d0442083e3c866f079d891b873b
+      size: 1498
+    outs:
+    - path: data/initial_data.csv
+      hash: md5
+      md5: 30c1f5cc79e177c715d0ba1e212d8f1f
+      size: 12155822
+      cloud:
+        my_storage:
+          etag: 30c1f5cc79e177c715d0ba1e212d8f1f
+          version_id: 00064D2B153EF5DA
+  fit_model:
+    cmd: python scripts/fit.py
+    deps:
+    - path: data/initial_data.csv
+      hash: md5
+      md5: 30c1f5cc79e177c715d0ba1e212d8f1f
+      size: 12155822
+    - path: params.yaml
+      hash: md5
+      md5: e908e7468d657f2d7f86361ca752febc
+      size: 237
+    - path: scripts/fit.py
+      hash: md5
+      md5: 6e4cbc458dc457213f2001bf2ea65d53
+      size: 2528
+    params:
+      params.yaml:
+        cat_features_names:
+        - is_apartment
+        - building_type_int
+        - has_elevator
+        one_hot_drop: if_binary
+        target_col: price
+    outs:
+    - path: models/fitted_model.pkl
+      hash: md5
+      md5: 3305cf5e46f7b9ab496bc5532e3db58e
+      size: 1125923
+      cloud:
+        my_storage:
+          etag: 3305cf5e46f7b9ab496bc5532e3db58e
+          version_id: 00064D2B153A4435
+  evaluate_model:
+    cmd: python scripts/evaluate.py
+    deps:
+    - path: data/initial_data.csv
+      hash: md5
+      md5: 30c1f5cc79e177c715d0ba1e212d8f1f
+      size: 12155822
+    - path: models/fitted_model.pkl
+      hash: md5
+      md5: 3305cf5e46f7b9ab496bc5532e3db58e
+      size: 1125923
+    - path: params.yaml
+      hash: md5
+      md5: e908e7468d657f2d7f86361ca752febc
+      size: 237
+    - path: scripts/evaluate.py
+      hash: md5
+      md5: fafae509b2806ed9a1cabc8becece607
+      size: 1218
+    params:
+      params.yaml:
+        target_col: price
+    outs:
+    - path: cv_results/cv_res.json
+      hash: md5
+      md5: 8fb284685d8188a74ccb5a61a7d39481
+      size: 62
+      cloud:
+        my_storage:
+          etag: 8fb284685d8188a74ccb5a61a7d39481
+          version_id: 00064D2B153592F6
